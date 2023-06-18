@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#EBEAEA"
+    tools:context=".recipeDetailActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="#00000000"
+            android:src="@drawable/baseline_arrow_back_ios_new_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/recipeFixedTextInRecipeDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="레시피"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/shareBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="#00000000"
+            android:src="@drawable/baseline_share_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#3AB83F"
+        android:layout_height="2dp"/>
+
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#EBEAEA">
+
+            <ImageView
+                android:id="@+id/recipeCompleteImage"
+                android:layout_width="370dp"
+                android:layout_height="212dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/rounded_border_in_recipepicture"
+                android:src="@drawable/noneofdata_recipe_data"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:id="@+id/RecipeNameInRecipeDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="레시피"
+                android:textColor="@color/black"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="6dp">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/person"/>
+
+                <TextView
+                    android:layout_width="95dp"
+                    android:layout_height="25dp"
+                    android:textSize="18dp"
+                    android:textColor="@color/black"
+                    android:text="1인분 이상"
+                    android:layout_gravity="center"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMaxTextSize="20dp"
+                    android:autoSizeMinTextSize="17dp"/>
+
+                <ImageView
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/clock"/>
+
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:textSize="18dp"
+                    android:layout_marginLeft="6dp"
+                    android:textColor="@color/black"
+                    android:text="약 40분"
+                    android:layout_gravity="center"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMaxTextSize="20dp"
+                    android:autoSizeMinTextSize="17dp"/>
+
+                <ImageView
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/restaurant"/>
+
+                <TextView
+                    android:id="@+id/difficulty"
+                    android:layout_width="60dp"
+                    android:layout_height="25dp"
+                    android:textSize="18dp"
+                    android:layout_marginLeft="6dp"
+                    android:textColor="@color/black"
+                    android:text="중급"
+                    android:layout_gravity="center"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMaxTextSize="20dp"
+                    android:autoSizeMinTextSize="17dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:background="#3AB83F"
+                android:layout_marginTop="18dp"
+                android:layout_marginHorizontal="11dp"
+                android:layout_height="2dp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="16dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/restaurant"/>
+
+                <TextView
+                    android:id="@+id/NeededIngredientFixedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="필요한 재료"
+                    android:layout_marginLeft="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/containerOfNeededIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="vertical"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:background="#3AB83F"
+                android:layout_marginTop="18dp"
+                android:layout_marginHorizontal="11dp"
+                android:layout_height="2dp"/>
+
+            <TextView
+                android:id="@+id/RecipeProcessFixedText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="조리 방법"
+                android:layout_marginLeft="16dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <LinearLayout
+                android:id="@+id/containerOfRecipeProcess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="vertical"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

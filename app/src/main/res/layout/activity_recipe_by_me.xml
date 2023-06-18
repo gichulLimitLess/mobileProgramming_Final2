@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#EBEAEA"
+    tools:context=".RecipeByMeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/backBtnInMyRecipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:background="#00000000"
+            android:src="@drawable/baseline_arrow_back_ios_new_24" />
+
+        <TextView
+            android:id="@+id/fixedTextInMyRecipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="나만의 레시피" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#3AB83F"
+        android:layout_height="2dp"/>
+
+    <LinearLayout
+        android:id="@+id/searching_inMyRecipe"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:id="@+id/recipeSearchInMyRecipe"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="레시피 이름을 검색하세요" />
+
+        <Button
+            android:id="@+id/recipeSearchBtnInMyRecipe"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="검색"
+            android:textSize="25dp"
+            android:backgroundTint="#36C33C"
+            />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/wholeRecipeRecyclerViewInMyRecipe"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:layout_height="0dp" />
+
+    <Button
+        android:id="@+id/addRecipeWhenVisible"
+        android:layout_width="225dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="93dp"
+        android:layout_marginEnd="93dp"
+        android:layout_marginBottom="99dp"
+        android:visibility="gone"
+        android:background="@drawable/btnstyle"
+        android:text="+ 추가하기"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/whenMyRecipeEmpty"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="238dp"
+            android:layout_height="314dp"
+            android:layout_marginStart="86dp"
+            android:layout_marginTop="71dp"
+            android:layout_marginEnd="87dp"
+            android:src="@drawable/no_myrecipe"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="83dp"
+            android:layout_marginEnd="83dp"
+            android:text="아직 나만의 레시피가 없어요"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <Button
+            android:id="@+id/addRecipe"
+            android:layout_width="225dp"
+            android:layout_height="54dp"
+            android:layout_marginStart="93dp"
+            android:layout_marginEnd="93dp"
+            android:layout_marginBottom="99dp"
+            android:background="@drawable/btnstyle"
+            android:text="+ 추가하기"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
