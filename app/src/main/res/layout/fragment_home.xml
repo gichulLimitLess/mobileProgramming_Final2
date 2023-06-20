@@ -60,25 +60,26 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="40dp"
             android:textColor="#3AB83F"
-            android:text="재료 삭제" />
+            android:text="전체 삭제" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_weight="1"
+        android:visibility="gone"
         android:layout_height="0dp" />
 
     <Button
         android:id="@+id/button"
-        android:visibility="gone"
         android:layout_width="300dp"
         android:layout_height="54dp"
         android:layout_gravity="center"
-        android:layout_marginTop="600dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/btnstyle"
         android:text="레시피 확인하기"
+        android:visibility="gone"
         android:textColor="@color/white"
         android:textSize="30dp" />
 
@@ -95,7 +96,7 @@
             android:layout_marginStart="86dp"
             android:layout_marginTop="71dp"
             android:layout_marginEnd="87dp"
-            android:src="@drawable/no_myrecipe"
+            android:src="@drawable/emptyrefrig"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -121,7 +122,7 @@
             android:layout_marginEnd="93dp"
             android:layout_marginBottom="99dp"
             android:background="@drawable/btnstyle"
-            android:text="+ 추가하기"
+            android:text="재료 추가하기"
             android:textColor="@color/white"
             android:textSize="30dp"
             app:layout_constraintBottom_toBottomOf="parent"

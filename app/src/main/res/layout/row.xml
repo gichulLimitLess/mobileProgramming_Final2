@@ -160,17 +160,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:visibility="gone"
         android:layout_margin="10dp"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/modifybtn"
             android:layout_width="100dp"
             android:layout_height="38dp"
             android:textSize="15dp"
             android:textColor="@color/white"
             android:background="@drawable/btnstyle"
+            android:text="수정" />
+
+        <Button
+            android:id="@+id/picbtn"
+            android:layout_width="100dp"
+            android:layout_height="38dp"
+            android:textSize="15dp"
+            android:layout_marginLeft="50dp"
+            android:textColor="@color/white"
+            android:background="@drawable/btnstyle"
             android:text="재료 사진" />
+
+
     </LinearLayout>
 </LinearLayout>

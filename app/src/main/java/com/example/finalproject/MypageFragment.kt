@@ -36,5 +36,10 @@ class MypageFragment : Fragment() {
             val intent = Intent(requireContext(), RecipeByMeActivity::class.java)
             startActivity(intent) //나만의 레시피 Activity로 간다
         }
+
+        binding.favoriteRecipeName.setOnClickListener {
+            val intent = Intent(requireContext(), LikedRecipeActivity::class.java)
+            startActivity(intent) //즐겨찾는 레시피 Activity로 간다
+        }
     }
 }

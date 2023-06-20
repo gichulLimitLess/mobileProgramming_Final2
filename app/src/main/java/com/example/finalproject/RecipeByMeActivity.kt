@@ -18,10 +18,9 @@ class RecipeByMeActivity : AppCompatActivity() {
     lateinit var binding: ActivityRecipeByMeBinding
 
     lateinit var recipeListDB: RecipeDatabase
-    lateinit var recipe_Adapter: recipeAdapter
+    lateinit var recipe_Adapter: myRecipeAdapter
 
     private val Ingredient_DBHelper: IngredientDBHelper by lazy { IngredientDBHelper(this) }
-
 
     //receivedMyRecipeSet은 DB에 저장되어 있는 모든 레시피의 정보들을 저장할 것이다
     //receviedMyIngredient는 DB에 저장되어 있는 사용자가 입력해 놓은 재료들의 정보를 저장할 것임
@@ -53,7 +52,7 @@ class RecipeByMeActivity : AppCompatActivity() {
             getMyRecipes()
         }
 
-        recipe_Adapter = recipeAdapter(receivedMyRecipeSet, receivedIngredientSet)
+        recipe_Adapter = myRecipeAdapter(receivedMyRecipeSet, receivedIngredientSet)
 
         //재료 추가 버튼을 누를 경우 나만의 레시피를 추가하는 화면으로 넘어간다
         binding.addRecipe.setOnClickListener {
@@ -67,15 +66,54 @@ class RecipeByMeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        recipe_Adapter.itemClickListener = object: myRecipeAdapter.OnItemClickListener {
+            override fun OnItemClick(item: recipeData, position: Int) {
+                //레시피 전체 정보를 띄우는 Activity로 넘어가도록 한다
+                navigateToAnotherActivity(item, position)
+            }
+        }
+
         //RecyclerView에게 우리가 정의한 adapter를 이용하여 화면에 띄우라고 알려주는 구문
         binding.wholeRecipeRecyclerViewInMyRecipe.adapter = recipe_Adapter
     }
 
+    //레시피 전체 정보를 띄우는 Activity로 넘어가도록 하는 함수
+    private fun navigateToAnotherActivity(item: recipeData, position: Int) {
+        val intent = Intent(this@RecipeByMeActivity, ModifyMyRecipeActivity::class.java)
+        val message = receivedMyRecipeSet[position]
+
+        intent.putExtra("recipeData", message)
+        startActivity(intent)
+    }
+
+    //layout을 초기화 한다
     private fun initLayout()
     {
         setRecyclerView()
         binding.backBtnInMyRecipe.setOnClickListener {
             finish()
+        }
+        //검색 버튼을 눌렀을 때
+        binding.recipeSearchBtnInMyRecipe.setOnClickListener {
+            var recipeName = binding.recipeSearchBtnInMyRecipe.text.toString()
+
+            //검색한 문자열 중 일부라도 포함하고 있으면 검색 결과에 노출될 것이다
+            recipeName = "%$recipeName%"
+
+            CoroutineScope(Dispatchers.IO).launch{
+                findSimilarRecipe(recipeName)
+                //insertRecipe()
+            }
+        }
+    }
+
+    //이름이 비슷한 레시피를 검색한다 (한 글자라도 들어가 있으면 검색 된다)
+    fun findSimilarRecipe(recipeName: String)
+    {
+        receivedMyRecipeSet = recipeListDB.recipeData_DAO().findSimilarRecipe(recipeName) as ArrayList<recipeData>
+        recipe_Adapter.recipe_items = receivedMyRecipeSet
+        CoroutineScope(Dispatchers.Main).launch{
+            recipe_Adapter.notifyDataSetChanged()
         }
     }
 

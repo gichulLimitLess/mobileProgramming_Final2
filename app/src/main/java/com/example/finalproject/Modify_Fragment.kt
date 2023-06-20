@@ -1,6 +1,7 @@
 package com.example.finalproject
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +12,10 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.finalproject.databinding.FragmentIngredientSelectBinding
+import com.example.finalproject.databinding.FragmentModifyBinding
 
-class IngredientSelectFragment : DialogFragment() {
-    var binding:FragmentIngredientSelectBinding? = null
+class Modify_Fragment(ingredient: Ingredient) : DialogFragment() {
+    var binding:FragmentModifyBinding? = null
     private val dbHelper: IngredientDBHelper by lazy { IngredientDBHelper(requireContext()) }
     val model:ChoiceViewModel by activityViewModels()
     val BuyYear: ArrayList<String> = arrayListOf("년", "2020", "2021", "2022", "2023")
@@ -26,13 +28,15 @@ class IngredientSelectFragment : DialogFragment() {
     val EndDay: ArrayList<String> = arrayListOf("일")
     val Unit: ArrayList<String> = arrayListOf("수량", "그램", "개")
 
-    var list1:String = ""
-    var list2:String = ""
-    var list3:String = ""
-    var list4:String = ""
-    var list5:String = ""
-    var list6:String = ""
-    var list7:String = ""
+    var list0:String = ingredient.Iname
+    var list1:String = ingredient.BuyYear.toString()
+    var list2:String = ingredient.BuyMonth.toString()
+    var list3:String = ingredient.BuyDay.toString()
+    var list4:String = ingredient.EndYear.toString()
+    var list5:String = ingredient.EndMonth.toString()
+    var list6:String = ingredient.EndDay.toString()
+    var list7:String = ingredient.Unit
+    var list8:String = ingredient.Quantity.toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +49,6 @@ class IngredientSelectFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         val spinner1: Spinner = binding!!.buyyear
         val spinner2: Spinner = binding!!.buymonth
         val spinner3: Spinner = binding!!.buyday
@@ -77,6 +79,21 @@ class IngredientSelectFragment : DialogFragment() {
         spinner5.adapter = adapter5
         spinner6.adapter = adapter6
         spinner7.adapter = adapter7
+
+        val BY = BuyYear.indexOf(list1)
+        spinner1.setSelection(BY)
+        val BM = BuyMonth.indexOf(list2)
+        spinner2.setSelection(BM)
+        val BD = BuyDay.indexOf(list3)
+        spinner3.setSelection(BD)
+        val EY = EndYear.indexOf(list4)
+        spinner4.setSelection(EY)
+        val EM = EndMonth.indexOf(list5)
+        spinner5.setSelection(EM)
+        val ED = EndDay.indexOf(list6)
+        spinner6.setSelection(ED)
+        val UN = Unit.indexOf(list7)
+        spinner7.setSelection(UN)
 
         binding!!.buyyear.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
@@ -178,23 +195,19 @@ class IngredientSelectFragment : DialogFragment() {
         }
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        binding?.ingredientName?.text = model.choice.value
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentIngredientSelectBinding.inflate(inflater, container, false)
+        binding = FragmentModifyBinding.inflate(inflater, container, false)
         init()
+        binding!!.ingredientName.text = list0
+        binding!!.quntitiy.setText(list8)
         return binding!!.root
-
     }
 
     private fun init(){
-        binding!!.complete.setOnClickListener {
+        binding!!.completeModify.setOnClickListener {
             // Check for default non-integer values in the spinner lists
             if(list1 == "년" || list2 == "월" || list3 == "일"
                 || list4 == "년" || list5 == "월" || list6 == "일"
@@ -210,9 +223,8 @@ class IngredientSelectFragment : DialogFragment() {
                     list4.toInt(), list5.toInt(), list6.toInt(),
                     list7
                 )
-                dbHelper.insertIngredient(ingredient)
+                dbHelper.updateIngredient(ingredient)
                 dismiss()
-                activity?.finish()
             }
         }
     }

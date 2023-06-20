@@ -99,9 +99,6 @@ class RecipeFragment : Fragment() {
             getAllRecipes()
         }
 
-        //테스트용
-        havingIngredient_List.add(Ingredient("당근", 3, 2023, 4, 14, 2023, 5, 30))
-
         recipe_Adapter.itemClickListener = object: recipeAdapter.OnItemClickListener {
             override fun OnItemClick(item: recipeData, position: Int) {
                 //레시피 전체 정보를 띄우는 Activity로 넘어가도록 한다
@@ -136,14 +133,6 @@ class RecipeFragment : Fragment() {
             //레시피를 정렬 한다
             val flag = sorting_Recipes()
             recipe_Adapter.ingredients = receivedIngredientSet
-
-            //정렬하지 못했다면
-            if(!flag)
-            {
-                CoroutineScope(Dispatchers.Main).launch{
-                    Toast.makeText(requireContext(), "재료가 들어가 있지 않아 정렬되지 않습니다", Toast.LENGTH_SHORT).show()
-                }
-            }
 
             //IO에서 Main으로 잠시 switch 해서 notifyDataSetChanged()를 호출해야 한다
             CoroutineScope(Dispatchers.Main).launch{

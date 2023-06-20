@@ -7,15 +7,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageView
@@ -24,21 +23,14 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior.getTag
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.get
-import androidx.core.view.marginBottom
-import androidx.core.view.marginTop
-import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
-import com.example.finalproject.databinding.ActivityAddMyRecipeBinding
+import com.example.finalproject.databinding.ActivityModifyMyRecipeBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 import java.io.File
 
-class AddMyRecipeActivity : AppCompatActivity() {
+class ModifyMyRecipeActivity : AppCompatActivity() {
 
     private lateinit var recipeStuffContainer: LinearLayout
     private lateinit var recipeProcessContainer: LinearLayout
@@ -53,7 +45,7 @@ class AddMyRecipeActivity : AppCompatActivity() {
 
     private val processImageViewMap: MutableMap<Int, Int> = mutableMapOf() //ImageView의 ID와 position 값들을 저장하기 위해 선언한 Map
 
-    lateinit var binding: ActivityAddMyRecipeBinding
+    lateinit var binding: ActivityModifyMyRecipeBinding
     lateinit var recipeListDB: RecipeDatabase
     lateinit var inputMyRecipeData: recipeData
 
@@ -61,10 +53,11 @@ class AddMyRecipeActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityAddMyRecipeBinding.inflate(layoutInflater)
+        binding = ActivityModifyMyRecipeBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initLayout()
+        getDataFromRecipeFragmentAndSet_inModifyMyRecipeActivity() //가져와서 세팅한다
         //앱 상단에 기본적으로 표시되는 작업 표시줄을 가려주기 위한 구문
         supportActionBar?.hide()
 
@@ -100,8 +93,8 @@ class AddMyRecipeActivity : AppCompatActivity() {
         }
 
         //추가 버튼을 눌렀을 때
-        binding.addMyRecipeBtn.setOnClickListener {
-            val flag = onAddButtonClicked()
+        binding.modifyMyRecipeBtn.setOnClickListener {
+            val flag = onModifyButtonClicked()
             //채워질 editText가 다 채워져 있다면
             if (flag) {
                 //현재 activity를 닫고, 스택에 존재하는 이전 activity를 가져온다
@@ -110,7 +103,7 @@ class AddMyRecipeActivity : AppCompatActivity() {
             else //채워야 할 게 남아 있다면
             {
                 Toast.makeText(
-                    this@AddMyRecipeActivity,
+                    this@ModifyMyRecipeActivity,
                     "최소한 영역별로 1개 이상씩 빈칸을 채워주세요",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -139,11 +132,13 @@ class AddMyRecipeActivity : AppCompatActivity() {
         recipeStuffContainer.addView(viewLayout)
     }
 
+    //dp 정보를 Px로 바꿔야 동적으로 레이아웃을 생성할 때 유리 하므로 함수를 설정한다
     private fun dpToPx(dp: Int): Int {
         val density = Resources.getSystem().displayMetrics.density
         return (dp * density + 0.5f).toInt()
     }
 
+    //재료 관련하여 동적인 Layout 형성을 위한 함수
     private fun createViewLayout_inIngredient(): LinearLayout {
 
         //아래 3개의 view들을 묶어서 저장할 LinearLayout을 선언
@@ -204,6 +199,7 @@ class AddMyRecipeActivity : AppCompatActivity() {
 
     }
 
+    //과정 정보 관련하여 동적인 Layout 형성을 위한 함수
     private fun createViewLayout_inProcess(): LinearLayout {
         //아래 3개의 view들을 묶어서 저장할 LinearLayout을 선언
         val viewLayout = LinearLayout(this)
@@ -353,7 +349,7 @@ class AddMyRecipeActivity : AppCompatActivity() {
                     val absolutePath = getAbsolutePathFromUri(this, selectedImageUri)
                     if (absolutePath != null) {
                         //이미지 파일 절대 경로를 이용하여 Glide에 적용한다
-                        Glide.with(this@AddMyRecipeActivity)
+                        Glide.with(this@ModifyMyRecipeActivity)
                             .load(File(absolutePath))
                             .placeholder(android.R.color.transparent) // Use a transparent placeholder
                             .centerCrop()
@@ -384,7 +380,7 @@ class AddMyRecipeActivity : AppCompatActivity() {
                 val absolutePath = getAbsolutePathFromUri(this, selectedImageUri)
                 if (absolutePath != null) {
                     // Apply to Glide using the absolute path of the image file
-                    Glide.with(this@AddMyRecipeActivity)
+                    Glide.with(this@ModifyMyRecipeActivity)
                         .load(File(absolutePath))
                         .placeholder(android.R.color.transparent) // Use a transparent placeholder
                         .centerCrop()
@@ -421,7 +417,8 @@ class AddMyRecipeActivity : AppCompatActivity() {
 
     //과정 정보들에 대한 이미지 URI들을 String으로 변환 하여 저장할 것이다
     var processImagesURL = mutableListOf<String>()
-    fun onAddButtonClicked(): Boolean {
+
+    fun onModifyButtonClicked(): Boolean {
         var myRecipeIngredients = mutableListOf<String>()
         var myRecipeIngredients_Count = mutableListOf<Int>()
         var spinnerValues = mutableListOf<String>()
@@ -478,20 +475,234 @@ class AddMyRecipeActivity : AppCompatActivity() {
 
         //나머지 정보들 추가
         val recipeName = binding.inputRecipeName.text.toString()
-        val url1 = binding.recipeCompletedImageInAddMyRecipe.tag.toString()
+        lateinit var completeImageURL: String
+
+        //null이 아닐 때만
+        if(binding.recipeCompletedImageInAddMyRecipe.tag.toString().isNotEmpty())
+        {
+            completeImageURL = binding.recipeCompletedImageInAddMyRecipe.tag.toString()
+        }
+        else
+        {
+            completeImageURL = "아무것도 없음"
+        }
+
         val recipeProcessPicturesURI = processImagesURL
-        val favoriteRecipe = 0
-        val isMine = 1
+        lateinit var recipeWhichAlreadyExists: recipeData
 
-        inputMyRecipeData = recipeData(recipeName, url1, recipeProcessPicturesURI, processValues, myRecipeIngredients,
-            myRecipeIngredients_Count, spinnerValues, favoriteRecipe, isMine
-        )
-
-        //DB에 삽입
+        //DB에 업데이트 시켜주기 위해 CoroutineScope 내부에 find와 update를 동시에 수행
         CoroutineScope(Dispatchers.IO).launch {
-            recipeListDB.recipeData_DAO().insertRecipe(inputMyRecipeData)
+            recipeWhichAlreadyExists = recipeListDB.recipeData_DAO().findRecipe(recipeName)
+            Log.d("GonnaBeOk",recipeWhichAlreadyExists.recipe_process[0])
+            //바꿀 field 들을 바꿔준다
+            recipeWhichAlreadyExists.recipe_CompletePicture_url = completeImageURL
+            recipeWhichAlreadyExists.recipeProcess_pictures_url = recipeProcessPicturesURI
+            recipeWhichAlreadyExists.recipe_process = processValues
+            recipeWhichAlreadyExists.recipe_stuff = myRecipeIngredients
+            recipeWhichAlreadyExists.recipe_stuff_count = myRecipeIngredients_Count
+            recipeWhichAlreadyExists.recipe_StuffCountUnit = spinnerValues
+
+            val list = listOf(recipeWhichAlreadyExists)
+
+            //DB에 업데이트까지 시켜준다
+            recipeListDB.recipeData_DAO().updateRecipe(list)
         }
 
         return true
+    }
+
+    //Data를 나만의 레시피에서 가져와서 setting 한다
+    fun getDataFromRecipeFragmentAndSet_inModifyMyRecipeActivity()
+    {
+        val intent = intent
+
+        //getSerizableExtra가 Deprecated 되어서, 이를 해결하기 위한 방법 (RecipeFragment로부터 intent로 데이터를 넘겨 받는 작업)
+        @Suppress("DEPRECATION")
+        val receivedRecipeData = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            intent.getSerializableExtra("recipeData", recipeData::class.java)
+        else
+            intent.getSerializableExtra("recipeData") as recipeData
+
+        var stuffCountList = receivedRecipeData?.recipe_stuff_count
+        var stuffCountUnitList = receivedRecipeData?.recipe_StuffCountUnit
+
+        var count_forSetting = 0
+
+        //for문을 돌리면서 넘겨 받은 재료 관련 정보들부터 세팅
+        if (receivedRecipeData != null) {
+            for(needed_List in receivedRecipeData.recipe_stuff)
+            {
+                //아래 3개의 view들을 묶어서 저장할 LinearLayout을 선언
+                val viewLayout = LinearLayout(this)
+                val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+
+                val marginInDpHorizontal = dpToPx(20)
+                val marginInDpTop = dpToPx(10)
+                layoutParams.setMargins(marginInDpHorizontal, marginInDpTop, marginInDpHorizontal, 0)
+                viewLayout.layoutParams = layoutParams
+                viewLayout.orientation = LinearLayout.HORIZONTAL
+
+                //재료명을 입력하는 EditText를 추가한다
+                val editText = EditText(this)
+                editText.id = editTextViewCount_Top_Name++
+                editText.layoutParams = LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    5f //weight 값으로 5를 준다
+                )
+                editText.gravity = Gravity.CENTER
+                editText.setText(needed_List) //가져온 재료 이름 정보를 바탕으로 text를 set한다
+                editText.textSize = 15f
+                viewLayout.addView(editText)
+
+                //수량을 입력하는 EditText를 추가한다
+                val editText2 = EditText(this)
+                editText2.id = editTextViewCount_Top_Count++
+                editText2.layoutParams = LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    2f //weight 값으로 2를 준다
+                )
+                editText2.gravity = Gravity.CENTER
+                editText2.setText(stuffCountList!![count_forSetting]?.toString()) //가져온 수량 정보를 바탕으로 text를 set한다
+                editText2.textSize = 18f
+                viewLayout.addView(editText2)
+
+                //수량의 단위를 입력하는 Spinner를 추가한다
+                val spinner = Spinner(this)
+                spinner.id = spinnerViewCount++
+                spinner.layoutParams = LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    3f //weight 값으로 3을 준다
+                )
+                spinner.gravity = Gravity.CENTER_VERTICAL
+                val spinnerValues = resources.getStringArray(R.array.count_unitArray)
+                val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, spinnerValues)
+                spinner.adapter = spinnerAdapter
+
+                val importedText = stuffCountUnitList!![count_forSetting] //가져온 count 정보를 바탕으로 spinner text를 set 한다
+                val index = spinnerValues.indexOf(importedText)
+                spinner.setSelection(index) //가져온 정보로 spinner를 세팅 해준다
+
+                viewLayout.addView(spinner) //spinner를 viewLayout에 추가한다
+
+                //만들어낸 viewLayout을 만들어서 recipeStuffContainer에 넣어준다
+                recipeStuffContainer.addView(viewLayout)
+                count_forSetting++
+            }
+        }
+
+        var count = 0
+
+        var processImageViewsURL = receivedRecipeData?.recipeProcess_pictures_url
+
+        //for문을 돌리면서 넘겨 받은 과정(Process) 과정 사진 정보 및 과정 텍스트 저장
+        if (receivedRecipeData != null) {
+            for(processString in receivedRecipeData.recipe_process)
+            {
+                //아래 3개의 view들을 묶어서 저장할 LinearLayout을 선언
+                val viewLayout = LinearLayout(this)
+                val layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+
+                val marginInDpHorizontal = dpToPx(16)
+                val marginInDpTop = dpToPx(6)
+                layoutParams.setMargins(marginInDpHorizontal, marginInDpTop, marginInDpHorizontal, 0)
+                viewLayout.layoutParams = layoutParams
+                viewLayout.orientation = LinearLayout.VERTICAL
+
+                //과정 정보 번호를 추가한다
+                val fixedText = TextView(this)
+                fixedText.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                )
+                fixedText.text = processInCount.toString() + "번"
+                fixedText.textSize = 15f
+                processInCount++
+                viewLayout.addView(fixedText)
+
+                //과정 별 사진을 추가할 수 있도록 한다
+                val processImageView = ImageView(this)
+                processImageView.id = View.generateViewId() //고유한 id를 지정하여 저장한다
+
+                val processImageView_height = dpToPx(150)
+                val layoutParams2 = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, processImageView_height
+                )
+
+                val marginInDpHorizontal2 = dpToPx(10)
+                val marginInDpVertical2 = dpToPx(6)
+                layoutParams2.setMargins(marginInDpHorizontal2, marginInDpVertical2, marginInDpHorizontal2, marginInDpVertical2)
+                processImageView.layoutParams = layoutParams2
+
+                //이미지 파일 절대 경로를 이용하여 Glide에 적용한다
+                Glide.with(this@ModifyMyRecipeActivity)
+                    .load(File(processImageViewsURL!![count]))
+                    .placeholder(android.R.color.transparent) // Use a transparent placeholder
+                    .centerCrop()
+                    .into(processImageView)
+
+                //해당 절대 경로를 imageView의 tag 값으로 집어 넣는다 (DB에 순서대로 저장하기 위해서)
+                processImageView.tag = processImageViewsURL!![count]
+
+                //processImageView의 id와 그의 position 값을 저장한다
+                processImageViewMap[processImageView.id] = processImageViewMap.size
+
+                //image 클릭에 대한 이벤트 처리할 것임
+                processImageView.setOnClickListener {
+
+                    //해당 id에 저장되어 있는 position 값을 이용해서
+                    val position = processImageViewMap[processImageView.id]
+
+                    //position 값이 null이 아니면
+                    if (position != null) {
+                        handleImageViewClick(position)
+                    }
+                }
+                viewLayout.addView(processImageView)
+
+
+                //과정 입력란을 추가한다
+                val editText = EditText(this)
+                editText.id = editTextViewCount_Bottom++
+
+                val InputBox_height = dpToPx(100)
+                editText.layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, InputBox_height
+                )
+                editText.gravity = Gravity.CENTER
+                editText.setText(processString)
+                editText.textSize = 15f
+                editText.setBackgroundResource(R.drawable.edittext_border)
+                viewLayout.addView(editText)
+
+                //만들어낸 viewLayout을 recipeProcessContainer에 붙여준다
+                recipeProcessContainer.addView(viewLayout)
+
+                count++
+            }
+        }
+
+        //불러온 url을 가지고 완성 이미지를 뿌려줄 것이다 (Glide library 활용)
+        var url = receivedRecipeData!!.recipe_CompletePicture_url
+
+        //레시피 이름을 전달 받은 이름으로 바꿔준다
+        binding.inputRecipeName.setText(receivedRecipeData!!.recipe_name)
+
+        //READ_EXTERNAL_STORAGE 권한이 애초에 허용이 되지 않았다면, 대표 이미지 또한 imageView에서 소스를 굳이 바꿔줄 필요가 없다
+        if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+            //이미지 파일 절대 경로를 이용하여 Glide에 적용한다
+            Glide.with(this).load(url).into(binding.recipeCompletedImageInAddMyRecipe)
+            binding.recipeCompletedImageInAddMyRecipe.tag = url
+        }
+
     }
 }

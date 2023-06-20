@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#EBEAEA"
-    tools:context=".AddMyRecipeActivity">
+    tools:context=".ModifyMyRecipeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:id="@+id/recipeFixedTextInAddMyRecipe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="나만의 레시피 추가"
+            android:text="나만의 레시피 수정"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
@@ -40,13 +40,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/addMyRecipeBtn"
+            android:id="@+id/modifyMyRecipeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:textColor="#3AB83F"
             android:textSize="20dp"
-            android:text="추가"
+            android:text="수정"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +97,7 @@
                     android:src="@drawable/noneofdata_recipe_data"
                     android:scaleType="fitXY"/>
 
-                <EditText
+                <TextView
                     android:id="@+id/inputRecipeName"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

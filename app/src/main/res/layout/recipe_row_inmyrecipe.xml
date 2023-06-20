@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recipe_row"
+    android:id="@+id/recipe_row_inmyrecipe"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_margin="5dp"
@@ -75,13 +75,18 @@
             android:text="개"
             android:textColor="@color/black"
             android:textSize="18dp" />
-        <ImageView
-            android:id="@+id/likeRecipe"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginRight="18dp"
-            android:layout_gravity="bottom"
-            android:src="@drawable/baseline_star_border_24"/>
+
+        <TextView
+            android:id="@+id/modifyMyRecipeBtn"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:textColor="#27962C"
+            android:textSize="28dp"
+            android:layout_gravity="center_vertical"
+            android:autoSizeTextType="uniform"
+            android:text="수정" />
+
     </LinearLayout>
 
 </LinearLayout>

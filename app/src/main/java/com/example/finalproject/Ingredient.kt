@@ -1,5 +1,9 @@
 package com.example.finalproject
 
-data class Ingredient(val Iname:String="없음", val Quantity:Int=0, val BuyYear:Int, val BuyMonth:Int,
-                      val BuyDay:Int, val EndYear:Int, val EndMonth:Int, val EndDay:Int)
+import java.io.Serializable
+
+data class Ingredient(
+    var id:Int, var Iname:String="", var Quantity:Int, var BuyYear:Int, var BuyMonth:Int,
+    var BuyDay:Int, var EndYear:Int, var EndMonth:Int, var EndDay:Int, var Unit:String
+)
 

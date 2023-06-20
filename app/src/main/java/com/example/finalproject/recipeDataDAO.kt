@@ -16,17 +16,20 @@ interface recipeDataDAO {
     fun deleteRecipe(recipeData: recipeData)
 
     @Update
-    fun updateRecipe(recipeData: recipeData)
+    fun updateRecipe(recipeData: List<recipeData>)
 
     @Query("Select * from recipeListTable")
     fun getAllRecord(): List<recipeData>
 
     @Query("Select * from recipeListTable where recipe_name = :name")
-    fun findRecipe(name: String): List<recipeData>
+    fun findRecipe(name: String): recipeData
 
     @Query("Select * from recipeListTable where recipe_name like :name")
     fun findSimilarRecipe(name: String): List<recipeData>
 
     @Query("Select * from recipeListTable where isMine = 1")
     fun findMyRecipe(): List<recipeData>
+
+    @Query("Select * from recipeListTable where favorite_Recipe = 1")
+    fun findLikedRecipe(): List<recipeData>
 }
