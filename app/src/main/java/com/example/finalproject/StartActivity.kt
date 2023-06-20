@@ -20,7 +20,7 @@ class StartActivity : AppCompatActivity() {
             finish()
         }, SPLASH_TIME_OUT)
 
-
+        //csv 파일을 파싱해서 DB에 저장할 것이다
     }
 
 }
