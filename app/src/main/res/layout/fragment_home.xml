@@ -71,7 +71,7 @@
         android:layout_height="0dp" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/checkRecipeBtn"
         android:layout_width="300dp"
         android:layout_height="54dp"
         android:layout_gravity="center"

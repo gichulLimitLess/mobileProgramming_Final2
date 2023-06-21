@@ -4,6 +4,7 @@ import android.content.Intent
 import android.media.CamcorderProfile.getAll
 import android.os.Bundle
 import android.provider.SyncStateContract.Helpers.insert
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +20,6 @@ import java.lang.NullPointerException
 class RecipeFragment : Fragment() {
 
     //임시 테스트용 Data
-    var havingIngredient_List: ArrayList<Ingredient> = ArrayList()
 
     lateinit var recipe_Adapter: recipeAdapter
 
@@ -105,6 +105,19 @@ class RecipeFragment : Fragment() {
                 navigateToAnotherActivity(item, position)
             }
         }
+        recipe_Adapter.itemClickListener2 = object: recipeAdapter.OnItemClickListener2{
+            override fun OnItemClick2(item: recipeData) {
+                if(item.likedRecipe == 0){
+                    item.likedRecipe = 1
+                }else{
+                    item.likedRecipe = 0
+                }
+                CoroutineScope(Dispatchers.IO).launch {
+                    recipeListDB.recipeData_DAO().updateRecipe(listOf(item))
+                    getAllRecipes()
+                }
+            }
+        }
 
         //RecyclerView에게 우리가 정의한 adapter를 이용하여 화면에 띄우라고 알려주는 구문
         binding.wholeRecipeRecyclerView.adapter = recipe_Adapter
@@ -115,6 +128,8 @@ class RecipeFragment : Fragment() {
     private fun navigateToAnotherActivity(item: recipeData, position: Int) {
         val intent = Intent(requireContext(), recipeDetailActivity::class.java)
         val message = receivedRecipeSet[position]
+
+        Log.d("whydoesit",message.recipe_process[0])
 
         intent.putExtra("recipeData", message)
         startActivity(intent)
@@ -159,9 +174,7 @@ class RecipeFragment : Fragment() {
         //가져온 재료 리스트가 비어있는 경우 (DB가 비어있는 경우)
         if(receivedIngredientSet.isEmpty())
         {
-            CoroutineScope(Dispatchers.Main).launch{
-                Toast.makeText(requireContext(), "재료 리스트가 비어 있습니다",Toast.LENGTH_SHORT).show()
-            }
+
         }
     }
 

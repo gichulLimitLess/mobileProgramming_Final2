@@ -89,7 +89,13 @@ class ModifyMyRecipeActivity : AppCompatActivity() {
 
         //재료 대표 이미지를 추가하려고 할 때
         binding.recipeCompletedImageInAddMyRecipe.setOnClickListener {
-            launchGallery_ForRepresentativeImage()
+            // Check permissions before launching the gallery
+            if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                launchGallery_ForRepresentativeImage()
+            } else {
+                // Request permissions
+                permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
         }
 
         //추가 버튼을 눌렀을 때

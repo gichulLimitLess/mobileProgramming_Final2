@@ -13,7 +13,12 @@ class recipeAdapter(var recipe_items: ArrayList<recipeData>, var ingredients: Ar
         fun OnItemClick(item: recipeData, position: Int)
     }
 
+    interface OnItemClickListener2 {
+        fun OnItemClick2(item: recipeData)
+    }
+
     var itemClickListener: OnItemClickListener? = null
+    var itemClickListener2:OnItemClickListener2? = null
 
     inner class RecipeViewHolder(val binding: RecipeRowBinding): RecyclerView.ViewHolder(binding.root) {
         init {
@@ -22,6 +27,9 @@ class recipeAdapter(var recipe_items: ArrayList<recipeData>, var ingredients: Ar
                 //bindingAdapterPosition은 현재 ViewHolder 클래스가 존재하는 어댑터에서의 position을 반환
                 //RecyclerView에 하나의 어댑터만 사용하고 있다면 이 메서드를 사용해서 아이템의 position을 가져올 수 있다
                 itemClickListener?.OnItemClick(recipe_items[adapterPosition], adapterPosition)
+            }
+            binding.likeRecipe.setOnClickListener {
+                itemClickListener2?.OnItemClick2(recipe_items[adapterPosition])
             }
         }
     }
@@ -37,19 +45,27 @@ class recipeAdapter(var recipe_items: ArrayList<recipeData>, var ingredients: Ar
     override fun onBindViewHolder(holder: recipeAdapter.RecipeViewHolder, position: Int) {
         holder.binding.allStuffCount.text = recipe_items[position].recipe_stuff.count().toString()
         holder.binding.recipeName.text = recipe_items[position].recipe_name
-
+        if(recipe_items[position].likedRecipe == 0){
+            holder.binding.likeRecipe.setImageResource(R.drawable.baseline_star_border_24)
+        }else{
+            holder.binding.likeRecipe.setImageResource(R.drawable.baseline_star_24)
+        }
         var count = 0
-        var i = 0
 
-        //현재 필요한 양을 충족하는 재료의 개수는 계산 해서 넣어 주어야 한다
-        for(ingredient in ingredients)
+        var i = 0
+        //계산해줄 것이다
+        for(recipes_stuff in recipe_items[position].recipe_stuff)
         {
-            if(ingredient.Iname == recipe_items[position].recipe_stuff[i] &&
-                    ingredient.Quantity >= recipe_items[position].recipe_stuff_count[i])
+            for(ingredient in ingredients)
             {
-                count++
+                if(ingredient.Iname == recipes_stuff && ingredient.Quantity <= recipe_items[position].recipe_stuff_count[i])
+                {
+                    count++
+                    break;
+                }
+                i++
             }
-            i++
+            i = 0
         }
 
         holder.binding.havingIngredientCount.text = count.toString()

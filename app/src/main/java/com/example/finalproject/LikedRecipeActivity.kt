@@ -124,7 +124,6 @@ class LikedRecipeActivity : AppCompatActivity() {
                 binding.searchingInLikedRecipe.visibility = View.VISIBLE
                 binding.whenLikedRecipeEmpty.visibility = View.GONE
                 binding.wholeRecipeRecyclerViewInLikedRecipe.visibility = View.VISIBLE
-                binding.addRecipeWhenVisible.visibility = View.VISIBLE
             }
         }
         else //데이터가 유효하지 않다면
@@ -134,7 +133,6 @@ class LikedRecipeActivity : AppCompatActivity() {
                 binding.searchingInLikedRecipe.visibility = View.GONE
                 binding.whenLikedRecipeEmpty.visibility = View.VISIBLE
                 binding.wholeRecipeRecyclerViewInLikedRecipe.visibility = View.GONE
-                binding.addRecipeWhenVisible.visibility = View.GONE
                 recipe_Adapter.recipe_items.clear()
                 recipe_Adapter.notifyDataSetChanged()
             }

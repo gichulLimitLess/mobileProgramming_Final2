@@ -46,14 +46,14 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
         if(data.isEmpty()){
-            binding.button.visibility = View.GONE
+            binding.checkRecipeBtn.visibility = View.GONE
             binding.adddelete.visibility = View.GONE
             binding.recycle.visibility = View.GONE
             binding.empty.visibility = View.VISIBLE
         }else{
             binding.recycle.visibility = View.VISIBLE
             binding.empty.visibility = View.GONE
-            binding.button.visibility = View.VISIBLE
+            binding.checkRecipeBtn.visibility = View.VISIBLE
             binding.adddelete.visibility = View.VISIBLE
         }
         binding.add.setOnClickListener {
@@ -62,7 +62,7 @@ class HomeFragment : Fragment() {
         }
         binding.delete.setOnClickListener {
             dbHelper.clearAllIngredients()
-            binding.button.visibility = View.GONE
+            binding.checkRecipeBtn.visibility = View.GONE
             binding.adddelete.visibility = View.GONE
             binding.recycle.visibility = View.GONE
             binding.empty.visibility = View.VISIBLE
@@ -72,6 +72,11 @@ class HomeFragment : Fragment() {
         binding.addingredi.setOnClickListener {
             val selectIntent = Intent(requireContext(), ChoiceActivity::class.java)
             startActivity(selectIntent)
+        }
+
+        binding.checkRecipeBtn.setOnClickListener {
+            val toCheckedRecipeIntent = Intent(requireContext(), RecipeCheckActivity::class.java)
+            startActivity(toCheckedRecipeIntent)
         }
 
         adapter.itemClickListener = object :IngerdeintAdapter.OnItemClickListener{
@@ -89,15 +94,15 @@ class HomeFragment : Fragment() {
         super.onResume()
         data.clear()
         data.addAll(dbHelper.getAllIngredients())
-        Log.i("tjrqja", data.toString())
+
         if(data.isEmpty()){
-            binding.button.visibility = View.GONE
+            binding.checkRecipeBtn.visibility = View.GONE
             binding.adddelete.visibility = View.GONE
             binding.recycle.visibility = View.GONE
             binding.empty.visibility = View.VISIBLE
         }else{
             binding.empty.visibility = View.GONE
-            binding.button.visibility = View.VISIBLE
+            binding.checkRecipeBtn.visibility = View.VISIBLE
             binding.adddelete.visibility = View.VISIBLE
             binding.recycle.visibility = View.VISIBLE
         }
@@ -117,13 +122,13 @@ class HomeFragment : Fragment() {
             adapter.notifyItemRemoved(position)
 
             if(data.isEmpty()){
-                binding.button.visibility = View.GONE
+                binding.checkRecipeBtn.visibility = View.GONE
                 binding.adddelete.visibility = View.GONE
                 binding.recycle.visibility = View.GONE
                 binding.empty.visibility = View.VISIBLE
             } else {
                 binding.empty.visibility = View.GONE
-                binding.button.visibility = View.VISIBLE
+                binding.checkRecipeBtn.visibility = View.VISIBLE
                 binding.adddelete.visibility = View.VISIBLE
                 binding.recycle.visibility = View.VISIBLE
             }

@@ -41,15 +41,20 @@ class myRecipeAdapter(var recipe_items: ArrayList<recipeData>, var ingredients: 
         var count = 0
         var i = 0
 
-        //현재 필요한 양을 충족하는 재료의 개수는 계산 해서 넣어 주어야 한다
-        for(ingredient in ingredients)
+        //현재 필요한 양을 충족하는 재료의 개수는 계산 해서 넣어 주어야 한다 (일부 만이라도 포함된 경우)
+        //계산해줄 것이다
+        for(recipes_stuff in recipe_items[position].recipe_stuff)
         {
-            if(ingredient.Iname == recipe_items[position].recipe_stuff[i] &&
-                    ingredient.Quantity >= recipe_items[position].recipe_stuff_count[i])
+            for(ingredient in ingredients)
             {
-                count++
+                if(ingredient.Iname == recipes_stuff && ingredient.Quantity <= recipe_items[position].recipe_stuff_count[i])
+                {
+                    count++
+                    break;
+                }
+                i++
             }
-            i++
+            i = 0
         }
 
         holder.binding.havingIngredientCount.text = count.toString()

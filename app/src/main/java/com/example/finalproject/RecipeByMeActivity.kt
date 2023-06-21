@@ -126,9 +126,7 @@ class RecipeByMeActivity : AppCompatActivity() {
         //가져온 재료 리스트가 비어있는 경우 (DB가 비어있는 경우)
         if(receivedIngredientSet.isEmpty())
         {
-            CoroutineScope(Dispatchers.Main).launch{
-                Toast.makeText(this@RecipeByMeActivity, "재료 리스트가 비어 있습니다", Toast.LENGTH_SHORT).show()
-            }
+
         }
     }
 
@@ -149,9 +147,7 @@ class RecipeByMeActivity : AppCompatActivity() {
             //정렬하지 못했다면
             if(!flag)
             {
-                CoroutineScope(Dispatchers.Main).launch{
-                    Toast.makeText(this@RecipeByMeActivity, "재료가 들어가 있지 않아 정렬되지 않습니다", Toast.LENGTH_SHORT).show()
-                }
+
             }
 
             //IO에서 Main으로 잠시 switch 해서 notifyDataSetChanged()를 호출해야 한다

@@ -55,6 +55,7 @@ class recipeDetailActivity : AppCompatActivity() {
         return (dp * density + 0.5f).toInt()
     }
 
+    var count = 0
     //Data를 나만의 레시피에서 가져와서 setting 한다
     fun getDataFromRecipeFragmentAndSet()
     {
@@ -81,12 +82,11 @@ class recipeDetailActivity : AppCompatActivity() {
             }
         }
 
-        var count = 0
-
         //for문을 돌리면서 넘겨 받은 과정(Process) text 정보 저장
         if (receivedRecipeData != null) {
             for(processString in receivedRecipeData.recipe_process)
             {
+                Log.d("string",processString)
                 //textView 위에 imageView(과정 정보 관련 사진) 추가
                 val imageView = ImageView(this)
                 imageView.id = View.generateViewId() //고유한 id를 지정하여 저장한다
@@ -105,7 +105,6 @@ class recipeDetailActivity : AppCompatActivity() {
                 {
                     //READ_EXTERNAL_STORAGE 권한이 애초에 허용이 되지 않았다면, imageView를 추가할 필요가 없다
                     if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        //왜 출력이 안될까? (Permission 문제 같은데 왜 이럴까?)
                         val absolutePath = receivedRecipeData.recipeProcess_pictures_url[count]
 
                         Log.d("URICorrect?",absolutePath)
@@ -123,6 +122,8 @@ class recipeDetailActivity : AppCompatActivity() {
                 {
                     Glide.with(this).load(receivedRecipeData.recipeProcess_pictures_url[count]).into(imageView)
                     containerLayout.addView(imageView)
+                    Log.d("whydoesnotWork",receivedRecipeData.recipeProcess_pictures_url[count])
+                    Log.d("whydoesnotWorkCount",count.toString())
                 }
 
                 //textView 추가
@@ -136,6 +137,8 @@ class recipeDetailActivity : AppCompatActivity() {
                 count++
             }
         }
+
+        count = 0
 
 
         //과정 정보의 개수에 따라 난이도를 나눌 것이다 (여기선 3개 이하 초급, 3~6개 사이 중급, 7개 이상 고급)

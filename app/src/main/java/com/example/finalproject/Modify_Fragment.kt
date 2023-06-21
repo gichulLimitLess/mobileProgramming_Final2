@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.finalproject.databinding.FragmentIngredientSelectBinding
 import com.example.finalproject.databinding.FragmentModifyBinding
 
-class Modify_Fragment(ingredient: Ingredient) : DialogFragment() {
+class Modify_Fragment(var ingredient: Ingredient) : DialogFragment() {
     var binding:FragmentModifyBinding? = null
     private val dbHelper: IngredientDBHelper by lazy { IngredientDBHelper(requireContext()) }
     val model:ChoiceViewModel by activityViewModels()
@@ -215,15 +215,15 @@ class Modify_Fragment(ingredient: Ingredient) : DialogFragment() {
                 // Display toast message
                 Toast.makeText(context, "모든 값을 입력해주세요.", Toast.LENGTH_SHORT).show()
             } else {
-                val ingredient: Ingredient = Ingredient(
-                    0,
+                val updateingredient: Ingredient = Ingredient(
+                    ingredient.id,
                     binding!!.ingredientName.text.toString(),
                     binding!!.quntitiy.text.toString().toInt(),
                     list1.toInt(), list2.toInt(), list3.toInt(),
                     list4.toInt(), list5.toInt(), list6.toInt(),
                     list7
                 )
-                dbHelper.updateIngredient(ingredient)
+                dbHelper.updateIngredient(updateingredient)
                 dismiss()
             }
         }

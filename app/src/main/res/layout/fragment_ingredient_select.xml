@@ -126,12 +126,6 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:layout_marginBottom="30dp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"/>
-
         <Button
             android:id="@+id/complete"
             android:layout_width="150dp"

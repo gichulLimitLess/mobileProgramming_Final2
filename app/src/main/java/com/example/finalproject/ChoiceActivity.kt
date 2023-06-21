@@ -2,8 +2,8 @@ package com.example.finalproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.SearchView
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,19 +48,19 @@ class ChoiceActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
         }
 
-//        binding.SearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                // 검색어를 제출할 때 호출됩니다.
-//                return false
-//            }
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                // 검색어가 변경될 때 호출됩니다.
-//                newText?.let {
-//                    // 필터링된 결과를 업데이트합니다.
-//                    adapter.filter.filter(it)
-//                }
-//                return true
-//            }
-//        })
+        binding.SearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // 검색어를 제출할 때 호출됩니다.
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // 검색어가 변경될 때 호출됩니다.
+                newText?.let {
+                    // 필터링된 결과를 업데이트합니다.
+                    adapter.filter.filter(it)
+                }
+                return true
+            }
+        })
     }
 }

@@ -37,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.w3c.dom.Text
 import java.io.File
+import java.io.FileOutputStream
 
 class AddMyRecipeActivity : AppCompatActivity() {
 
@@ -96,7 +97,14 @@ class AddMyRecipeActivity : AppCompatActivity() {
 
         //재료 대표 이미지를 추가하려고 할 때
         binding.recipeCompletedImageInAddMyRecipe.setOnClickListener {
-            launchGallery_ForRepresentativeImage()
+
+            // Check permissions before launching the gallery
+            if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                launchGallery_ForRepresentativeImage()
+            } else {
+                // Request permissions
+                permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
         }
 
         //추가 버튼을 눌렀을 때
@@ -381,19 +389,20 @@ class AddMyRecipeActivity : AppCompatActivity() {
             data?.data?.let { selectedImageUri ->
                 val imageView = binding.recipeCompletedImageInAddMyRecipe
 
-                val absolutePath = getAbsolutePathFromUri(this, selectedImageUri)
-                if (absolutePath != null) {
+                val copiedFilePath = copyFileFromUriToCache(selectedImageUri)
+                //val absolutePath = getAbsolutePathFromUri(this, selectedImageUri)
+                if (copiedFilePath != null) {
                     // Apply to Glide using the absolute path of the image file
                     Glide.with(this@AddMyRecipeActivity)
-                        .load(File(absolutePath))
+                        .load(File(copiedFilePath))
                         .placeholder(android.R.color.transparent) // Use a transparent placeholder
                         .centerCrop()
                         .into(imageView)
 
                     // Insert the absolute path as the tag value of imageView (to save in DB in order)
-                    imageView.tag = absolutePath
+                    imageView.tag = copiedFilePath
                 } else {
-                    Toast.makeText(this, "Failed to get file absolute path", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Failed to copy file", Toast.LENGTH_SHORT).show()
                 }
 
                 // Check if the absolute path of the image is loaded correctly
@@ -402,9 +411,23 @@ class AddMyRecipeActivity : AppCompatActivity() {
         }
     }
 
+    private fun copyFileFromUriToCache(uri: Uri): String? {
+        val inputStream = contentResolver.openInputStream(uri) ?: return null
+        val outputFile = File(cacheDir, "temp_image.jpg")
+        val outputStream = FileOutputStream(outputFile)
+
+        inputStream.use { input ->
+            outputStream.use { output ->
+                input.copyTo(output)
+            }
+        }
+
+        return outputFile.absolutePath
+    }
 
 
-    //동적으로 생성되는 ImageView를 Click 했을 때의 이벤트 처리
+
+        //동적으로 생성되는 ImageView를 Click 했을 때의 이벤트 처리
     private fun handleImageViewClick(position: Int) {
 
         //position 값을 함수 외부의 변수에 저장하여 galleryLauncher에서도 사용할 수 있게 한다
