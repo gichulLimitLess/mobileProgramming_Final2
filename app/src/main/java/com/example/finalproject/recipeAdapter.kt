@@ -58,7 +58,7 @@ class recipeAdapter(var recipe_items: ArrayList<recipeData>, var ingredients: Ar
         {
             for(ingredient in ingredients)
             {
-                if(ingredient.Iname == recipes_stuff && ingredient.Quantity <= recipe_items[position].recipe_stuff_count[i])
+                if(ingredient.Iname == recipes_stuff && ingredient.Quantity >= recipe_items[position].recipe_stuff_count[i])
                 {
                     count++
                     break;

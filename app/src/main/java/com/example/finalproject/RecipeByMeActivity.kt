@@ -208,7 +208,6 @@ class RecipeByMeActivity : AppCompatActivity() {
                     else if(recipe_stuff == userIngredient.Iname && recipe.recipe_stuff_count[i] > userIngredient.Quantity)
                     {
                         needed_IngredientCount[recipe_sortingNumber] += recipe.recipe_stuff_count[i] - userIngredient.Quantity
-                        needed_IngredientTypes[recipe_sortingNumber]++
                         i++
                     }
                     //해당 재료 자체를 가지고 있지 않은 경우

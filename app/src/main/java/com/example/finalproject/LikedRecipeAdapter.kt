@@ -42,11 +42,12 @@ class LikedRecipeAdapter(var recipe_items: ArrayList<recipeData>, var ingredient
         var i = 0
 
         //현재 필요한 양을 충족하는 재료의 개수는 계산 해서 넣어 주어야 한다 (일부 만이라도 포함된 경우)
+        //계산해줄 것이다
         for(recipes_stuff in recipe_items[position].recipe_stuff)
         {
             for(ingredient in ingredients)
             {
-                if(ingredient.Iname == recipes_stuff && ingredient.Quantity <= recipe_items[position].recipe_stuff_count[i])
+                if(ingredient.Iname == recipes_stuff && ingredient.Quantity >= recipe_items[position].recipe_stuff_count[i])
                 {
                     count++
                     break;

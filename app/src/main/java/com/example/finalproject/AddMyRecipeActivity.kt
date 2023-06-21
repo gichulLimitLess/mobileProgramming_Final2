@@ -390,23 +390,19 @@ class AddMyRecipeActivity : AppCompatActivity() {
                 val imageView = binding.recipeCompletedImageInAddMyRecipe
 
                 val copiedFilePath = copyFileFromUriToCache(selectedImageUri)
-                //val absolutePath = getAbsolutePathFromUri(this, selectedImageUri)
                 if (copiedFilePath != null) {
-                    // Apply to Glide using the absolute path of the image file
+                    //절대 경로를 이용하여 Glide에 집어 넣은 후 사용할 것이다
                     Glide.with(this@AddMyRecipeActivity)
                         .load(File(copiedFilePath))
-                        .placeholder(android.R.color.transparent) // Use a transparent placeholder
+                        .placeholder(android.R.color.transparent) //기존의 이미지를 대체하는 경우에는 placeholder를 사용해야 한다
                         .centerCrop()
                         .into(imageView)
 
-                    // Insert the absolute path as the tag value of imageView (to save in DB in order)
+                    //imageView의 tag에 집어 넣음으로서 나중에 DB에 저장을 용이하게 할 것이다
                     imageView.tag = copiedFilePath
                 } else {
                     Toast.makeText(this, "Failed to copy file", Toast.LENGTH_SHORT).show()
                 }
-
-                // Check if the absolute path of the image is loaded correctly
-                Toast.makeText(this, imageView.tag.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }

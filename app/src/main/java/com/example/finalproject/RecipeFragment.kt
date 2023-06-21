@@ -212,7 +212,6 @@ class RecipeFragment : Fragment() {
                     else if(recipe_stuff == userIngredient.Iname && recipe.recipe_stuff_count[i] > userIngredient.Quantity)
                     {
                         needed_IngredientCount[recipe_sortingNumber] += recipe.recipe_stuff_count[i] - userIngredient.Quantity
-                        needed_IngredientTypes[recipe_sortingNumber]++
                         i++
                     }
                     //해당 재료 자체를 가지고 있지 않은 경우
@@ -234,7 +233,7 @@ class RecipeFragment : Fragment() {
             for (j in 1 until list_Length - pass) {
 
                 //필요한 재료의 종류가 뒤의 레시피가 더 적어서 뒤의 레시피가 더 우선순위를 갖는 경우
-                if (needed_IngredientTypes[j] < needed_IngredientTypes[j - 1]) {
+                if (needed_IngredientTypes[j - 1] > needed_IngredientTypes[j]) {
                     val temp = receivedRecipeSet[j]
                     receivedRecipeSet[j] = receivedRecipeSet[j - 1]
                     receivedRecipeSet[j - 1] = temp
@@ -242,7 +241,7 @@ class RecipeFragment : Fragment() {
                     swapped = true
                 }
                 //필요한 재료의 종류는 같지만, 기준치를 충족하기 위한 총량도 더 적은 경우
-                else if (needed_IngredientTypes[j] == needed_IngredientTypes[j - 1] &&
+                else if (needed_IngredientTypes[j - 1] == needed_IngredientTypes[j] &&
                     needed_IngredientCount[j] < needed_IngredientCount[j - 1])
                 {
                     val temp = receivedRecipeSet[j]
